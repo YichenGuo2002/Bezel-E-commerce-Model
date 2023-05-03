@@ -1,8 +1,8 @@
 import './App.css'; // page css
 import './style.css'; // tailwind css script
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function App() {
+function App(props) {
   const orderEmpty = {
     "id": 0,
     "listing": {},
@@ -24,9 +24,29 @@ function App() {
   };
 
   const getOrder = async () =>{
-
+    let orderUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123';
+    await fetch(orderUrl, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"}
+      //body: JSON.stringify(data),
+  })
+    .then(response =>{
+      //check if status code is valid
+      if (response.ok) { 
+        return response.json()
+      }else{
+        throw new Error(response.status + " Failed GET.");
+      }
+    })
+    .then(data =>{
+      setOrder(data);
+    })
+    .catch(err =>{
+      setErrorMessage("Sorry, failed to load the order. Try again later!");
+      console.log(err)
+    })
   }
-  
+
   const acceptSale = async () =>{
     let acceptUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/accept';
     await fetch(acceptUrl, {
@@ -40,7 +60,7 @@ function App() {
         console.log("Sale Accepted.")
         closeBg();
       }else{
-        throw new Error(response.status + "Failed POST.");
+        throw new Error(response.status + " Failed POST.");
       }
     })
     .catch(err =>{
@@ -62,7 +82,7 @@ function App() {
         console.log("Sale Rejected.")
         closeBg();
       }else{
-        throw new Error(response.status + "Failed POST.");
+        throw new Error(response.status + " Failed POST.");
       }
     })
     .catch(err =>{
@@ -107,6 +127,10 @@ function App() {
     </g>
     </svg>
   )
+
+  useEffect(() => {
+    getOrder();
+  }, [])
 
   return (
     <div className = "fixed top-0 left-0 w-full h-full flex items-center justify-center font-sans">
