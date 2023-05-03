@@ -23,6 +23,10 @@ function App(props) {
     setIsOpen(false);
   };
 
+  const convertMoney = (cents) =>{
+    
+  };
+
   const getOrder = async () =>{
     let orderUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123';
     await fetch(orderUrl, {
@@ -91,26 +95,6 @@ function App(props) {
     });
   }
 
-  let productImg = (
-    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-      width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000"
-      preserveAspectRatio="xMidYMid meet">
-      <metadata>
-      Created by potrace 1.16, written by Peter Selinger 2001-2019
-      </metadata>
-      <g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)"
-      fill="#000000" stroke="none">
-      <path d="M344 920 l-150 -5 -57 -49 -57 -48 0 -369 0 -369 420 0 420 0 0 369
-      0 369 -61 51 -61 51 -138 0 c-76 0 -144 1 -152 3 -7 2 -81 0 -164 -3z m136
-      -70 l0 -30 -157 0 -157 0 34 30 c35 29 36 29 158 30 l122 0 0 -30z m320 0 l34
-      -30 -157 0 -157 0 0 30 0 30 123 0 c121 -1 122 -1 157 -30z m80 -400 l0 -330
-      -380 0 -380 0 0 330 0 330 380 0 380 0 0 -330z"/>
-      <path d="M392 688 c-7 -7 -12 -24 -12 -38 0 -14 5 -31 12 -38 16 -16 200 -16
-      216 0 15 15 15 61 0 76 -16 16 -200 16 -216 0z"/>
-      </g>
-    </svg>
-  )
-
   let close = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
     className = "h-6 w-6" viewBox="0 0 100.000000 100.000000"
@@ -161,9 +145,11 @@ function App(props) {
                 <p className = "mt-2 mb-2 text-black">Rolex DeepSea Sea-Dweller James Cameron 116660</p>
                 <p className = "mb-2 text-btn-sm">New / 2014</p>
               </div>
-              <img 
-              src = "https://getbezel.mo.cloudinary.net/sandbox/1583bb64-0df2-4a69-a10d-119e464ab6fe.png"
-              className = "m-2"></img>
+              {
+                order["listing"]['images']?(
+                  <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2"></img>
+                ):null
+              }
             </div>
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
             <div className = "flex flex-row place-content-between text-btn-sm mb-2 mt-4">
