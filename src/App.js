@@ -1,7 +1,17 @@
 import './App.css'; // page css
 import './style.css'; // tailwind css script
+import React, { useState } from "react";
 
 function App() {
+  const [isOpen, setIsOpen] = useState(true);
+
+  const openBg = () => {
+    setIsOpen(true);
+  };
+
+  const closeBg = () => {
+    setIsOpen(false);
+  };
 
   let product = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +35,7 @@ function App() {
 
   let close = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-    width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000"
+    className = "h-6 w-6" viewBox="0 0 100.000000 100.000000"
     preserveAspectRatio="xMidYMid meet">
     <metadata>
     Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -42,7 +52,10 @@ function App() {
 
   return (
     <div className = "fixed top-0 left-0 w-full h-full flex items-center justify-center font-sans">
-      <div className="popUp bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8">
+      {
+        isOpen?
+        (
+        <div className="popUp relative bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8">
         
         <div className = "actionPanel h-full flex flex-col place-content-between pl-4 pr-4">
           <div className = "p-8">
@@ -97,7 +110,18 @@ function App() {
             </div>
         </div>
 
-      </div>
+        <button onClick = {closeBg} className = "absolute top-3 right-3 h-6 w-6">{close}</button>
+
+      </div>):null
+      }
+      
+      
+      {
+        isOpen?(
+          <button tabindex = "-1" class = "fixed pin h-full w-full cursor-default bg-black opacity-50 -z-50"></button>
+        ):null
+      }
+
     </div>
   );
 }
