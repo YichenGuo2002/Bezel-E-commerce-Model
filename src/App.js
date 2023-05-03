@@ -3,8 +3,17 @@ import './style.css'; // tailwind css script
 import React, { useState } from "react";
 
 function App() {
+  const orderEmpty = {
+    "id": 0,
+    "listing": {},
+    "salePriceCents": 0,
+    "commissionRateBips": 0,
+    "sellerFeeCents": 0,
+    "payoutAmountCents": 0
+  }
   const [isOpen, setIsOpen] = useState(true);
-  let errorMessage = "";
+  const [order, setOrder] = useState(orderEmpty);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const openBg = () => {
     setIsOpen(true);
@@ -14,37 +23,55 @@ function App() {
     setIsOpen(false);
   };
 
+  const getOrder = async () =>{
+
+  }
+  
   const acceptSale = async () =>{
     let acceptUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/accept';
-    try{
-      const response = await fetch(acceptUrl);
-      /*
-      const data = await response.json();
-      return data;
-      closeBg();
-      */
-      errorMessage = "Sorry, failed to accept the sale. Try again later!";
-    }catch(err){
-      errorMessage = "Sorry, failed to accept the sale. Try again later!";
-      console.log(err);
-      console.log("hi")
-    }
+    await fetch(acceptUrl, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"}
+      //body: JSON.stringify(data),
+  })
+    .then(response =>{
+      //check if status code is valid
+      if (response.ok) { 
+        console.log("Sale Accepted.")
+        closeBg();
+      }else{
+        throw new Error(response.status + "Failed POST.");
+      }
+    })
+    .catch(err =>{
+      setErrorMessage("Sorry, failed to accept the sale. Try again later!");
+      console.log(err)
+    })
   }
 
   const rejectSale = async () =>{
     let rejectUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/decline';
-    try{
-      const response = await fetch(rejectUrl);
-      const data = await response.json();
-      closeBg();
-      return data;
-    }catch(err){
-      errorMessage = "Sorry, failed to reject the sale. Try again later!";
+    await fetch(rejectUrl, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"}
+      //body: JSON.stringify(data),
+  })
+    .then(response =>{
+      //check if status code is valid
+      if (response.ok) { 
+        console.log("Sale Rejected.")
+        closeBg();
+      }else{
+        throw new Error(response.status + "Failed POST.");
+      }
+    })
+    .catch(err =>{
+      setErrorMessage("Sorry, failed to reject the sale. Try again later!");
       console.log(err);
-    }
+    });
   }
 
-  let product = (
+  let productImg = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
       width="100.000000pt" height="100.000000pt" viewBox="0 0 100.000000 100.000000"
       preserveAspectRatio="xMidYMid meet">
