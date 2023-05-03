@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
+  let errorMessage = "";
 
   const openBg = () => {
     setIsOpen(true);
@@ -12,6 +13,36 @@ function App() {
   const closeBg = () => {
     setIsOpen(false);
   };
+
+  const acceptSale = async () =>{
+    let acceptUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/accept';
+    try{
+      const response = await fetch(acceptUrl);
+      /*
+      const data = await response.json();
+      return data;
+      closeBg();
+      */
+      errorMessage = "Sorry, failed to accept the sale. Try again later!";
+    }catch(err){
+      errorMessage = "Sorry, failed to accept the sale. Try again later!";
+      console.log(err);
+      console.log("hi")
+    }
+  }
+
+  const rejectSale = async () =>{
+    let rejectUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/decline';
+    try{
+      const response = await fetch(rejectUrl);
+      const data = await response.json();
+      closeBg();
+      return data;
+    }catch(err){
+      errorMessage = "Sorry, failed to reject the sale. Try again later!";
+      console.log(err);
+    }
+  }
 
   let product = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +97,9 @@ function App() {
             </p>
           </div>
           <div className = "">
-            <button className = "w-full bg-btn text-popup rounded-3xl p-4">Accept sale</button>
-            <button className = "w-full text-btn rounded-3xl p-4">Reject sale</button>
+            <p className = "pl-8 pr-8 mb-4 text-center text-rose-600">{errorMessage}</p>
+            <button onClick = {acceptSale} className = "w-full bg-btn text-popup rounded-3xl p-4">Accept sale</button>
+            <button onClick = {rejectSale} className = "w-full text-btn rounded-3xl p-4">Reject sale</button>
           </div>
         </div>
 
@@ -118,7 +150,7 @@ function App() {
       
       {
         isOpen?(
-          <button tabindex = "-1" class = "fixed pin h-full w-full cursor-default bg-black opacity-50 -z-50"></button>
+          <button tabIndex = "-1" className = "fixed pin h-full w-full cursor-default bg-black opacity-80 -z-50"></button>
         ):null
       }
 
