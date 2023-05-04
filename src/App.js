@@ -3,6 +3,7 @@ import './style.css'; // tailwind css script
 import React, { useState, useEffect } from "react";
 
 function App(props) {
+  //Default Empty Order State
   const orderEmpty = {
     "id": 0,
     "listing": {
@@ -28,14 +29,19 @@ function App(props) {
   const [accept, setAccept] = useState(false);
   const [reject, setReject] = useState(false);
 
+  //Open a gray background for the pop-up
   const openBg = () => {
+    setErrorMessage("");
     setIsOpen(true);
   };
 
+  //Close the background
   const closeBg = () => {
     setIsOpen(false);
+    setErrorMessage("");
   };
 
+  //Convert Number to money String. 123400 to $1,234.00
   const convertMoney = (cents) =>{
     //There is some problem in handling very large numbers due to IEEE-754 standard representation
     cents = cents.toString();
@@ -44,10 +50,12 @@ function App(props) {
     }
   };
 
+  //Uppercase first letter and lowercase other letters
   const convertCondition = (condition) =>{
-    return condition[0] + condition.slice(1).toLowerCase();
+    return condition[0].toUpperCase() + condition.slice(1).toLowerCase();
   }
 
+  //Fetch order
   const getOrder = async () =>{
     setErrorMessage("");
     let orderUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123';
@@ -73,6 +81,7 @@ function App(props) {
     })
   }
 
+  //Accept Sale
   const acceptSale = async () =>{
     setErrorMessage("");
     let acceptUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/accept';
@@ -97,6 +106,7 @@ function App(props) {
     })
   }
 
+  //Reject Sale
   const rejectSale = async () =>{
     setErrorMessage("");
     let rejectUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/decline';
@@ -121,6 +131,7 @@ function App(props) {
     });
   }
 
+  //SVG for the close button
   let close = (
     <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
     className = "h-6 w-6" viewBox="0 0 100.000000 100.000000"
@@ -138,6 +149,7 @@ function App(props) {
     </svg>
   )
 
+  //After opening the page, first fetch the order
   useEffect(() => {
     getOrder();
   }, [])
