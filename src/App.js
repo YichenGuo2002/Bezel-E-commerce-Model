@@ -5,7 +5,18 @@ import React, { useState, useEffect } from "react";
 function App(props) {
   const orderEmpty = {
     "id": 0,
-    "listing": {},
+    "listing": {
+    "model": {
+        "displayName": "Model",
+        "brand": {
+            "displayName": "Brand"
+        },
+        "referenceNumber": "Reference",
+       },
+    "manufactureYear": "Year",
+    "condition": "Condition",
+    "images": []
+    },
     "salePriceCents": 0,
     "commissionRateBips": 0,
     "sellerFeeCents": 0,
@@ -24,10 +35,19 @@ function App(props) {
   };
 
   const convertMoney = (cents) =>{
-    
+    //There is some problem in handling very large numbers due to IEEE-754 standard representation
+    cents = cents.toString();
+    if(cents.length >= 3){
+      return "$" + Number(cents.slice(0, -2)).toLocaleString() +  "." + cents.slice(-2);
+    }
   };
 
+  const convertCondition = (condition) =>{
+    return condition[0] + condition.slice(1).toLowerCase();
+  }
+
   const getOrder = async () =>{
+    setErrorMessage("");
     let orderUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123';
     await fetch(orderUrl, {
       method: "GET",
@@ -52,6 +72,7 @@ function App(props) {
   }
 
   const acceptSale = async () =>{
+    setErrorMessage("");
     let acceptUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/accept';
     await fetch(acceptUrl, {
       method: "POST",
@@ -74,6 +95,7 @@ function App(props) {
   }
 
   const rejectSale = async () =>{
+    setErrorMessage("");
     let rejectUrl = 'https://eb863a74-7a4e-4daf-9540-d2db8470c18e.mock.pstmn.io/marketplace/orders/123/decline';
     await fetch(rejectUrl, {
       method: "POST",
@@ -142,11 +164,18 @@ function App(props) {
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
             <div className = "productDisplay grid grid-cols-5 mt-2 mb-2">
               <div className = "productDetail col-span-4">
-                <p className = "mt-2 mb-2 text-black">Rolex DeepSea Sea-Dweller James Cameron 116660</p>
-                <p className = "mb-2 text-btn-sm">New / 2014</p>
+                <p className = "mt-2 mb-2 text-black">
+                {
+                order["listing"]["model"]["brand"]["displayName"] + " " +
+                order["listing"]["model"]["displayName"] + " " +
+                order["listing"]["model"]["referenceNumber"]
+                }
+                </p>
+                <p className = "mb-2 text-btn-sm">
+                  {convertCondition(order["listing"]["condition"])} /  {order["listing"]["manufactureYear"]}</p>
               </div>
               {
-                order["listing"]['images']?(
+                order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
                   <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2"></img>
                 ):null
               }
@@ -154,15 +183,15 @@ function App(props) {
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
             <div className = "flex flex-row place-content-between text-btn-sm mb-2 mt-4">
               <p>Selling Price</p>
-              <p className = "text-black">$17945</p>
+              <p className = "text-black">{convertMoney(order["salePriceCents"])}</p>
             </div>
             <div className = "flex flex-row place-content-between text-btn-sm mb-2">
               <p>Level 1 Commission (6.5%)</p>
-              <p>$17945</p>
+              <p>{convertMoney(order["commissionRateBips"])}</p>
             </div>
             <div className = "flex flex-row place-content-between text-btn-sm mb-2">
               <p>Seller fee</p>
-              <p>$17945</p>
+              <p>{convertMoney(order["sellerFeeCents"])}</p>
             </div>
             <div className = "flex flex-row place-content-between text-btn-sm mb-2">
               <p>Insured Shipping</p>
@@ -175,7 +204,7 @@ function App(props) {
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
           <div className = "flex flex-row place-content-between text-black font-bold mb-2">
               <p>Earnings</p>
-              <p>$22378.25</p>
+              <p>{convertMoney(order["payoutAmountCents"])}</p>
             </div>
         </div>
 
