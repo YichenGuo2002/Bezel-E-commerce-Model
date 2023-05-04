@@ -1,19 +1,10 @@
- - Assignment Name: Bezel Challenge
+ - Assignment Name: Bezel Challenge: E-commerce Model
 
- - Assignment Tech Stack: C, OpenMP
+ - Assignment Tech Stack: React (Hooks), Tailwind CSS, Javascript/HTML/CSS
 
- - Description: 
+ - Description: An e-commerce model with accept and reject sale features. Iteract with API endpoints to fetch product information and post user responses. The main code can be found at src/App.js
 
- - Code Cheatsheet:
+ - How to run: At the project's root folder, use the command:
  ```
-sftp <id>@access1.cims.nyu.edu
-put <file>
-exit
-
-ssh <id>@access1.cims.nyu.edu
-ssh <id>@crunchy1.cims.nyu.edu
-module load gcc-12.2
-
-gcc -Wall -std=c99 -fopenmp -o filename filename.c -lm
-./filename x y z k
+npm start
  ```
