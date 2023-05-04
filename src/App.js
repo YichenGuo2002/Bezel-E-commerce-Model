@@ -139,16 +139,18 @@ function App(props) {
   }, [])
 
   return (
-    <div className = "fixed top-0 left-0 w-full h-full flex items-center justify-center font-sans">
+  <>
+
+    <div className = "mainContainer fixed top-0 left-0 w-full h-full font-sans flex items-center justify-center z-50">
       {
         isOpen?
         (
-        <div className="popUp relative bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8">
+        <div className="popUp relative bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8 z-50">
         
         <div className = "actionPanel h-full flex flex-col place-content-between pl-4 pr-4">
           <div className = "p-8">
             <p className = "mb-2 text-neutral-400">CONGRATS!</p>
-            <p className = "text-2xl mb-8 text-btn font-bold">Your watch sold!</p>
+            <p className = "text-2xl mb-8 text-btn font-semibold">Your watch sold!</p>
             <p className = "text-btn-sm">You have 1 business day to accept the sale. 
               If you do not accept, it will be automatically rejected.
             </p>
@@ -216,12 +218,57 @@ function App(props) {
       
       {
         isOpen?(
-          <button tabIndex = "-1" className = "fixed pin h-full w-full cursor-default bg-black opacity-80 -z-50"></button>
+          <button tabIndex = "-1" className = "fixed top-0 left-0 pin h-full w-full cursor-default bg-black opacity-80 z-40"></button>
         ):null
       }
-
     </div>
+
+        
+    <div className = "productPage fixed top-0 left-0 w-full h-full grid grid-cols-2 bg-popup z-0">
+        <div className = "flex w-full h-full items-center justify-center rounded-3xl bg-white">
+          {
+            order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
+              <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2 h-full object-contain object-center"></img>
+            ):null
+          }
+        </div>
+        <div className ="pl-4 pr-4 pt-12 pb-12">
+          <p className = "mb-2 text-neutral-400"> <a href="https://www.google.com/">SHOP</a> / <a href="url">REF 116660</a> /</p>
+          <p className = "text-5xl mb-8 text-btn font-semibold leading-snug">1900 Patek Philippe Nautilus 5712/1A-001</p>
+          <hr className = "border border-neutral-300 mt-2 mb-2"/>
+          <div>
+            <div>
+              <p>PAPERS</p>
+              <p>YES</p>
+            </div>
+            <div>
+              <p>PAPERS</p>
+              <p>YES</p>
+            </div>
+            <div>
+              <p>PAPERS</p>
+              <p>YES</p>
+            </div>
+            <div>
+              <p>CASE SIZE</p>
+              <p>40MM</p>
+            </div>
+          </div>
+          <hr className = "border border-neutral-300 mt-2 mb-2"/>
+          <button>Accept sale</button>
+          <button>Reject sale</button>
+          <p>Login first for authentication</p>
+          <p>The story</p>
+          <p>The classic by Gerald Genta, re-imagined with a combination of 'small' complications. The result is a funky, a-symmetrical dial that's nothing if not appealing to the eye.</p>
+        </div>
+    </div>
+
+    </>
   );
 }
-
+/*{
+            order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
+              <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2 object-contain object-center border"></img>
+            ):null
+          }*/
 export default App;
