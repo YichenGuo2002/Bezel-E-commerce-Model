@@ -25,6 +25,8 @@ function App(props) {
   const [isOpen, setIsOpen] = useState(true);
   const [order, setOrder] = useState(orderEmpty);
   const [errorMessage, setErrorMessage] = useState("");
+  const [accept, setAccept] = useState(false);
+  const [reject, setReject] = useState(false);
 
   const openBg = () => {
     setIsOpen(true);
@@ -84,6 +86,7 @@ function App(props) {
       if (response.ok) { 
         console.log("Sale Accepted.")
         closeBg();
+        setAccept(true);
       }else{
         throw new Error(response.status + " Failed POST.");
       }
@@ -107,6 +110,7 @@ function App(props) {
       if (response.ok) { 
         console.log("Sale Rejected.")
         closeBg();
+        setReject(true);
       }else{
         throw new Error(response.status + " Failed POST.");
       }
@@ -141,90 +145,89 @@ function App(props) {
   return (
   <>
 
-    <div className = "mainContainer fixed top-0 left-0 w-full h-full font-sans flex items-center justify-center z-50">
       {
         isOpen?
         (
-        <div className="popUp relative bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8 z-50">
+        <div className = "mainContainer fixed top-0 left-0 w-full h-full font-sans flex items-center justify-center z-50">
+          
+          <div className="popUp relative bg-popup w-3/5 min-h-4/6 grid grid-cols-2 rounded-3xl p-8 z-50">
         
-        <div className = "actionPanel h-full flex flex-col place-content-between pl-4 pr-4">
-          <div className = "p-8">
-            <p className = "mb-2 text-neutral-400">CONGRATS!</p>
-            <p className = "text-2xl mb-8 text-btn font-semibold">Your watch sold!</p>
-            <p className = "text-btn-sm">You have 1 business day to accept the sale. 
-              If you do not accept, it will be automatically rejected.
-            </p>
-          </div>
-          <div className = "">
-            <p className = "pl-8 pr-8 mb-4 text-center text-rose-600">{errorMessage}</p>
-            <button onClick = {acceptSale} className = "w-full bg-btn text-popup rounded-3xl p-4">Accept sale</button>
-            <button onClick = {rejectSale} className = "w-full text-btn rounded-3xl p-4">Reject sale</button>
-          </div>
-        </div>
-
-        <div className = "productPanel h-full bg-watch rounded-3xl p-10">
-          <hr className = "border border-neutral-300 mt-2 mb-2"/>
-            <div className = "productDisplay grid grid-cols-5 mt-2 mb-2">
-              <div className = "productDetail col-span-4">
-                <p className = "mt-2 mb-2 text-black">
-                {
-                order["listing"]["model"]["brand"]["displayName"] + " " +
-                order["listing"]["model"]["displayName"] + " " +
-                order["listing"]["model"]["referenceNumber"]
-                }
+            <div className = "actionPanel h-full flex flex-col place-content-between pl-4 pr-4">
+              <div className = "p-8">
+                <p className = "mb-2 text-neutral-400">CONGRATS!</p>
+                <p className = "text-2xl mb-8 text-btn font-semibold">Your watch sold!</p>
+                <p className = "text-btn-sm">You have 1 business day to accept the sale. 
+                  If you do not accept, it will be automatically rejected.
                 </p>
-                <p className = "mb-2 text-btn-sm">
-                  {convertCondition(order["listing"]["condition"])} /  {order["listing"]["manufactureYear"]}</p>
               </div>
-              {
-                order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
-                  <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2"></img>
-                ):null
-              }
+              <div className = "">
+                <p className = "pl-8 pr-8 mb-4 text-center text-rose-600">{errorMessage}</p>
+                <button onClick = {acceptSale} className = "w-full bg-btn text-popup rounded-3xl p-4">Accept sale</button>
+                <button onClick = {rejectSale} className = "w-full text-btn rounded-3xl p-4">Reject sale</button>
+              </div>
             </div>
-          <hr className = "border border-neutral-300 mt-2 mb-2"/>
-            <div className = "flex flex-row place-content-between text-btn-sm mb-2 mt-4">
-              <p>Selling Price</p>
-              <p className = "text-black">{convertMoney(order["salePriceCents"])}</p>
+
+            <div className = "productPanel h-full bg-watch rounded-3xl p-10">
+              <hr className = "border border-neutral-300 mt-2 mb-2"/>
+                <div className = "productDisplay grid grid-cols-5 mt-2 mb-2">
+                  <div className = "productDetail col-span-4">
+                    <p className = "mt-2 mb-2 text-black">
+                    {
+                    order["listing"]["model"]["brand"]["displayName"] + " " +
+                    order["listing"]["model"]["displayName"] + " " +
+                    order["listing"]["model"]["referenceNumber"]
+                    }
+                    </p>
+                    <p className = "mb-2 text-btn-sm">
+                      {convertCondition(order["listing"]["condition"])} /  {order["listing"]["manufactureYear"]}</p>
+                  </div>
+                  {
+                    order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
+                      <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2"></img>
+                    ):null
+                  }
+                </div>
+              <hr className = "border border-neutral-300 mt-2 mb-2"/>
+                <div className = "flex flex-row place-content-between text-btn-sm mb-2 mt-4">
+                  <p>Selling Price</p>
+                  <p className = "text-black">{convertMoney(order["salePriceCents"])}</p>
+                </div>
+                <div className = "flex flex-row place-content-between text-btn-sm mb-2">
+                  <p>Level 1 Commission (6.5%)</p>
+                  <p>{convertMoney(order["commissionRateBips"])}</p>
+                </div>
+                <div className = "flex flex-row place-content-between text-btn-sm mb-2">
+                  <p>Seller fee</p>
+                  <p>{convertMoney(order["sellerFeeCents"])}</p>
+                </div>
+                <div className = "flex flex-row place-content-between text-btn-sm mb-2">
+                  <p>Insured Shipping</p>
+                  <p>Free</p>
+                </div>
+                <div className = "flex flex-row place-content-between text-auth mb-4">
+                  <p>Bezel authentication</p>
+                  <p>Free</p>
+                </div>
+              <hr className = "border border-neutral-300 mt-2 mb-2"/>
+              <div className = "flex flex-row place-content-between text-black font-bold mb-2">
+                  <p>Earnings</p>
+                  <p>{convertMoney(order["payoutAmountCents"])}</p>
+                </div>
             </div>
-            <div className = "flex flex-row place-content-between text-btn-sm mb-2">
-              <p>Level 1 Commission (6.5%)</p>
-              <p>{convertMoney(order["commissionRateBips"])}</p>
-            </div>
-            <div className = "flex flex-row place-content-between text-btn-sm mb-2">
-              <p>Seller fee</p>
-              <p>{convertMoney(order["sellerFeeCents"])}</p>
-            </div>
-            <div className = "flex flex-row place-content-between text-btn-sm mb-2">
-              <p>Insured Shipping</p>
-              <p>Free</p>
-            </div>
-            <div className = "flex flex-row place-content-between text-auth mb-4">
-              <p>Bezel authentication</p>
-              <p>Free</p>
-            </div>
-          <hr className = "border border-neutral-300 mt-2 mb-2"/>
-          <div className = "flex flex-row place-content-between text-black font-bold mb-2">
-              <p>Earnings</p>
-              <p>{convertMoney(order["payoutAmountCents"])}</p>
-            </div>
-        </div>
 
         <button onClick = {closeBg} className = "absolute top-3 right-3 h-6 w-6">{close}</button>
 
-      </div>):null
-      }
-      
-      
-      {
-        isOpen?(
-          <button tabIndex = "-1" className = "fixed top-0 left-0 pin h-full w-full cursor-default bg-black opacity-80 z-40"></button>
+        </div>
+
+        <button disabled tabIndex = "-1" className = "fixed top-0 left-0 pin h-full w-full cursor-default bg-black opacity-80 z-40"></button>
+
+      </div>
         ):null
       }
-    </div>
+      
 
         
-    <div className = "productPage fixed top-0 left-0 w-full h-full grid grid-cols-2 bg-popup z-0">
+    <div className = "productPage fixed top-0 left-0 w-full min-h-full grid grid-cols-2 bg-popup z-0">
         <div className = "flex w-full h-full items-center justify-center rounded-3xl bg-white">
           {
             order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
@@ -233,42 +236,55 @@ function App(props) {
           }
         </div>
         <div className ="pl-4 pr-4 pt-12 pb-12">
-          <p className = "mb-2 text-neutral-400"> <a href="https://www.google.com/">SHOP</a> / <a href="url">REF 116660</a> /</p>
-          <p className = "text-5xl mb-8 text-btn font-semibold leading-snug">1900 Patek Philippe Nautilus 5712/1A-001</p>
+          <p className = "mb-2 text-neutral-400"> 
+          <a href="https://shop.getbezel.com/explore" className = "underline">SHOP</a> / <a href="/" className = "underline">REF 116660</a> /</p>
+          <p className = "text-5xl mb-8 text-btn font-semibold leading-snug">
+          {
+                    order["listing"]["manufactureYear"] + " " +
+                    order["listing"]["model"]["brand"]["displayName"] + " " +
+                    order["listing"]["model"]["displayName"] + " " +
+                    order["listing"]["model"]["referenceNumber"]
+          }
+          </p>
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
-          <div>
+          <div className = "flex flex-row w-full justify-between items-around pl-12 pr-12 pt-2 pb-2">
             <div>
-              <p>PAPERS</p>
-              <p>YES</p>
+              <p className = "text-auth mb-2">CONDITION</p>
+              <p className = "text-btn">{order["listing"]["condition"]}</p>
             </div>
             <div>
-              <p>PAPERS</p>
-              <p>YES</p>
+              <p className = "text-auth mb-2">BOX</p>
+              <p className = "text-btn">YES</p>
             </div>
             <div>
-              <p>PAPERS</p>
-              <p>YES</p>
+              <p className = "text-auth mb-2">PAPERS</p>
+              <p className = "text-btn">YES</p>
             </div>
             <div>
-              <p>CASE SIZE</p>
-              <p>40MM</p>
+              <p className = "text-auth mb-2">CASE SIZE</p>
+              <p className = "text-btn">40MM</p>
             </div>
           </div>
           <hr className = "border border-neutral-300 mt-2 mb-2"/>
-          <button>Accept sale</button>
-          <button>Reject sale</button>
-          <p>Login first for authentication</p>
-          <p>The story</p>
-          <p>The classic by Gerald Genta, re-imagined with a combination of 'small' complications. The result is a funky, a-symmetrical dial that's nothing if not appealing to the eye.</p>
-        </div>
+          {
+            !accept && !reject?(
+              <>
+                <button onClick = {openBg} className = "w-full bg-btn text-popup rounded-3xl p-4 mb-2 mt-8">Accept sale</button>
+                <button onClick = {openBg} className = "w-full text-btn rounded-3xl p-4 border border-btn" >Reject sale</button>
+              </>
+            ):(
+              <button disabled className = "w-full bg-slate-300 border border-slate-500 text-popup rounded-3xl p-4 mb-2 mt-8">Sale {accept?<>accepted</> : <>rejected</>}</button>
+            )
+          }
+          
+          <p className = "mt-4 text-btn text-center">Please login first for <a href="https://shop.getbezel.com/api/auth/login" className = "italic underline">authentication</a></p>
+          <p className = "mt-24 text-2xl mb-4 text-btn">The story</p>
+          <p className = "text-btn-sm">{order["listing"]["model"]["description"]}</p>
+          </div>
     </div>
 
     </>
   );
 }
-/*{
-            order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
-              <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2 object-contain object-center border"></img>
-            ):null
-          }*/
+
 export default App;
