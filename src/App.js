@@ -195,7 +195,7 @@ function App(props) {
                   </div>
                   {
                     order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
-                      <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2"></img>
+                      <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2" alt = "product"></img>
                     ):null
                   }
                 </div>
@@ -243,7 +243,7 @@ function App(props) {
         <div className = "flex w-full h-full items-center justify-center rounded-3xl bg-white">
           {
             order["listing"]['images'] && order["listing"]['images'].length >= 1 ?(
-              <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2 h-full object-contain object-center"></img>
+              <img src = {order["listing"]['images'][0]['image']['url']} className = "m-2 h-full object-contain object-center" alt = "product"></img>
             ):null
           }
         </div>
